@@ -1,5 +1,35 @@
 # Learning React Query
 
+## Contents
+
+[Resources](#resources)
+
+<u>[**Notes - BASICS**](#notes---basics)</u>
+
+[**Setup**](#setup)
+
+[**Queries**](#queries)
+
+- [`useQuery`](#usequery)
+
+[**Mutations**](#mutations)
+
+- [`useMutation`](#usemutation)
+- [`mutate` method](#mutate-method)
+- [`reset` method](#reset-method)
+
+[**Query Invalidation**](#query-invalidation)
+
+- [`QueryClient`](#queryclient)
+- [`invalidateQueries` method](#invalidatequeries-method)
+- [Other `QueryClient` methods to control query caching](#other-queryclient-methods-to-control-query-caching)
+
+[**Full example from docs**](#full-example-from-docs)
+
+<u>[**Notes - ADVANCED**](#notes---advanced)</u>
+
+[**Mutation side effects**](#mutation-side-effects)
+
 ## Resources
 
 - [React Query in 100 Seconds](https://www.youtube.com/watch?v=novnyCaa7To)
@@ -7,6 +37,44 @@
 - [TkDodo's Blog](https://tanstack.com/query/latest/docs/react/community/tkdodos-blog#12-mastering-mutations-in-react-query) - written by a maintainer of the library
 
 ## Notes - BASICS
+
+React Query provides a centralized way to manage data fetching.
+
+It also helps manage:
+
+- Caching
+- Deduping multiple requests for the same data into a single request
+- Updating "out of date" data in the background
+- Knowing when data is "out of date"
+- Reflecting updates to data as quickly as possible
+- Performance optimizations like pagination and lazy loading data
+- Managing memory and garbage collection of server state
+- Memoizing query results with structural sharing
+
+### Setup
+
+1. Install React Query: `npm npm i react-query`
+2. Create a `QueryClient`.
+3. Wrap your app in the `QueryClientProvider`, handing in the `QueryClient` with the `client` prop.
+
+```tsx
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
+
+// Create a client
+const queryClient = new QueryClient()
+
+function App() {
+  return (
+    // Provide the client to your App
+    <QueryClientProvider client={queryClient}>
+      <App />
+    </QueryClientProvider>
+  )
+}
+```
 
 ### Queries
 
@@ -16,7 +84,7 @@
 - Can automatically retry failed requests
 - Gives useful info about the query's state (loading, error, success, etc.)
 
-**`useQuery`**
+#### `useQuery`
 
 This is the hook to fetch and manage data.
 
@@ -71,7 +139,7 @@ function Todos() {
 
 *Mutations* are operations used to change (or potentially change) remote data, e.g. POST, PUT, PATCH, or DELETE.
 
-**`useMutation`**
+#### `useMutation`
 
 This hook handles mutations. Mutations are usually done manually (like triggering with a function call). This is usually in response to a user action (like a form submission).
 
@@ -99,7 +167,7 @@ const mutation = useMutation({
   - `mutate`
   - `reset`
 
-**`mutate` method**
+#### `mutate` method
 
 - This is where you invoke the callback function you passed to `useMutation` initially.
 - Whatever argument(s) you hand to `mutate` will be passed into the callback function.
@@ -140,7 +208,7 @@ function App() {
 }
 ```
 
-**`reset` method**
+#### `reset` method
 
 This lets you clear the `error` or `data` of a mutation request.
 
@@ -175,7 +243,52 @@ const CreateTodo = () => {
 
 ### Query Invalidation
 
-### Example from [docs](https://tanstack.com/query/v3/docs/react/quick-start)
+React Query can cache your data to avoid unnecessary requests, but when something changes on the server, React Query needs to know that the cache is no longer valid.
+
+When you do a mutation that changes data on the server, you can tell React Query that this invalidates some queries. The next time a component uses that query, React Query will know to refetch rather than just using its cache.
+
+#### `QueryClient`
+
+To do things like invalidating queries, you can import the `QueryClient` object from React Query. Via the query provider wrapped around the app with the instance of the `QueryClient` passed into it, this client can automatically access all of the caching and other features from React Query across your whole app. As long as your queries are within the `QueryClientProvider`, the `QueryClient` will manage them.
+
+You can use the `useQueryClient()` hook to get the `QueryClient` from the provider's context.
+
+#### `invalidateQueries` method
+
+The `QueryClient` has an `invalidateQueries` method that lets you mark queries as stale or invalid and refetch where you need to.
+
+When a query is invalidated with `invalidateQueries`:
+
+- It is marked as stale, overwriting any configurations being used in `useQuery` or related hooks.
+- If the query is currently being rendered via `useQuery` or related hooks, it will also be refetched in the background.
+
+You can either just call `invalidateQueries` with no arguments, invalidating every cached query, or pass it specific keys (or partial keys or other filtering information) to tell it which queries to invalidate.
+
+🔀 [Click here](https://tanstack.com/query/latest/docs/react/guides/filters#query-filters) for more information on filtering for specific queries.
+
+```tsx
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+
+// Get QueryClient from the provider's context
+const queryClient = useQueryClient()
+
+// Invalidate every query in the cache
+queryClient.invalidateQueries()
+// Invalidate every query with a key that starts with `todos`
+queryClient.invalidateQueries({ queryKey: ['todos'] })
+```
+
+#### Other `QueryClient` methods to control query caching
+
+`QueryClient` has other methods to control what happens to queries, such as:
+
+- `resetQueries` -> Both invalidates and refetches specific queries immediately, rather than waiting for the next time the cached versions are accessed
+- `refetchQueries` -> Immediately refetches certain queries, rather than waiting for the next time the cached versions are accessed
+- `removeQueries` -> Removes specific queries from the cache (clear cached data no longer needed)
+- `cancelQueries` -> Cancel any ongoing queries (useful when you want to cancel a long-running query)
+- `prefetchQuery` -> Fetches a query and puts the result into the cache for a specified time, even if no components are actually using it (useful for preloading data you anticipate your user will need in the near future)
+
+### Full example from [docs](https://tanstack.com/query/v3/docs/react/quick-start)
 
 ```js
 import {
