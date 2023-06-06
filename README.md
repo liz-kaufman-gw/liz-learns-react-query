@@ -2,33 +2,33 @@
 
 ## Contents
 
-[Resources](#resources)
+📚 [Resources](#resources)
 
-🏁 [**Notes - BASICS**](#notes---basics)
+[**Notes - BASICS**](#notes---basics)
 
-[Setup](#setup)
+🔸 [Setup](#setup)
 
-[Queries](#queries)
+🔸 [Queries](#queries)
 
 - [`useQuery`](#usequery)
 
-[Mutations](#mutations)
+🔸 [Mutations](#mutations)
 
 - [`useMutation`](#usemutation)
 - [`mutate` method](#mutate-method)
 - [`reset` method](#reset-method)
 
-[Query Invalidation](#query-invalidation)
+🔸 [Query Invalidation](#query-invalidation)
 
 - [`QueryClient`](#queryclient)
 - [`invalidateQueries` method](#invalidatequeries-method)
 - [Other `QueryClient` methods to control query caching](#other-queryclient-methods-to-control-query-caching)
 
-[Full example from docs](#full-example-from-docs)
+🔸 [Full example from docs](#full-example-from-docs)
 
-🧠 [**Notes - ADVANCED**](#notes---advanced)
+[**Notes - ADVANCED**](#notes---advanced)
 
-[Mutation side effects](#mutation-side-effects)
+🔸 [Mutation side effects](#mutation-side-effects)
 
 ## Resources
 
