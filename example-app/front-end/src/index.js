@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import {
   QueryClient,
   QueryClientProvider,
-} from '@tanstack/react-query'
+} from 'react-query'
 
 const queryClient = new QueryClient()
 

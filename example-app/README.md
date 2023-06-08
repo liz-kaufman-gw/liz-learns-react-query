@@ -14,3 +14,5 @@
 1. `cd` into the `example-app/front-end` folder
 2. Run `npm start` to start the front end locally on port 3000
 3. View the front end on <http://localhost:3000>
+
+You'll need the server running as well (in a separate terminal) for the front end to work correctly.
