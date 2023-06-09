@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
 // GET a single todo by ID
 router.get('/:id', async (req, res) => {
   const data = await readDataFile();
-  const todo = data.find(item => item.id === req.params.id);
+  const todo = data.find(item => item.id === Number(req.params.id));
   res.json(todo);
 });
 
@@ -36,8 +36,11 @@ router.post('/', async (req, res) => {
 // PUT (update) a todo by ID
 router.put('/:id', async (req, res) => {
   const updatedTodo = req.body;
+  console.log('Updated todo from body: ', updatedTodo)
   let data = await readDataFile();
-  data = data.map(todo => todo.id === req.params.id ? updatedTodo : todo);
+  data = data.map(todo =>
+    String(todo.id) === req.params.id ? updatedTodo : todo
+  );
   await fs.writeFile(DATA_FILE, JSON.stringify(data, null, 2));
   res.json(updatedTodo);
 });
@@ -45,7 +48,7 @@ router.put('/:id', async (req, res) => {
 // DELETE a todo by ID
 router.delete('/:id', async (req, res) => {
   let data = await readDataFile();
-  data = data.filter(todo => todo.id !== req.params.id);
+  data = data.filter(todo => String(todo.id) !== req.params.id);
   await fs.writeFile(DATA_FILE, JSON.stringify(data, null, 2));
   res.json({ id: req.params.id });
 });

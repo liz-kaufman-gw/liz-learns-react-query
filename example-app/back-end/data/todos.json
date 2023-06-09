@@ -1,6 +1,12 @@
-{
-  "todos": [
-    { "id": 1, "title": "Walk the plants", "isCompleted": false },
-    { "id": 2, "title": "Water the dog", "isCompleted": false }
-  ]
-}
+[
+  {
+    "id": 1,
+    "title": "Walk the plants",
+    "isCompleted": false
+  },
+  {
+    "id": 2,
+    "title": "Water the dog",
+    "isCompleted": false
+  }
+]
